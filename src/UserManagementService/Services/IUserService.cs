@@ -9,6 +9,7 @@ namespace UserManagementService.Services
         Task<User> CreateAsync(User user);
         Task<User?> UpdateAsync(Guid id, UserUpdateDto userUpdate);
         Task<bool> DeleteAsync(Guid id);
-        Task<IEnumerable<User>> GetAllActiveAsync();
+        Task<IEnumerable<User>> GetAllAsync();
+        Task<User?> GetOneAsync(Guid id);
     }
 }

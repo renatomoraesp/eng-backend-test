@@ -44,9 +44,14 @@ namespace UserManagementService.Services
             return await _userRepository.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<User>> GetAllActiveAsync()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _userRepository.GetAllActiveAsync();
+            return await _userRepository.GetAllAsync();
+        }
+
+        public async Task<User?> GetOneAsync(Guid id)
+        {
+            return await _userRepository.GetByIdAsync(id);
         }
     }
 }

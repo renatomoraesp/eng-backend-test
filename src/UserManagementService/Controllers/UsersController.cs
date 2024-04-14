@@ -20,7 +20,7 @@ namespace UserManagementService.Controllers
         public async Task<IActionResult> Create([FromBody] User user)
         {
             var createdUser = await _userService.CreateAsync(user);
-            return CreatedAtAction(nameof(GetAllActive), new { id = createdUser.id }, createdUser);
+            return CreatedAtAction(nameof(GetAll), new { id = createdUser.id }, createdUser);
         }
 
         [HttpPut("{id}/active")]
@@ -28,7 +28,7 @@ namespace UserManagementService.Controllers
         {
             var updatedUser = await _userService.UpdateAsync(id, updateDto);
             if (updatedUser == null)
-                throw new NotFoundException($"User with ID {id} not found.");
+                return NotFound();
 
             return Ok(updatedUser);
         }
@@ -43,11 +43,21 @@ namespace UserManagementService.Controllers
             return NoContent();
         }
 
-        [HttpGet("active")]
-        public async Task<IActionResult> GetAllActive()
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
-            var activeUsers = await _userService.GetAllActiveAsync();
-            return Ok(activeUsers);
+            var users = await _userService.GetAllAsync();
+            return Ok(users);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetOne(Guid id)
+        {
+            var user = await _userService.GetOneAsync(id);
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
         }
     }
 }

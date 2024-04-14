@@ -40,9 +40,9 @@ namespace UserManagementService.Repositories
             return true;
         }
 
-        public async Task<IEnumerable<User>> GetAllActiveAsync()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _dbContext.Users.Where(u => u.active).ToListAsync();
+            return await _dbContext.Users.ToListAsync();
         }
 
         public async Task<User?> GetByIdAsync(Guid id)
