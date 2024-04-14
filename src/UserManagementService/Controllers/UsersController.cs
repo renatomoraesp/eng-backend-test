@@ -23,7 +23,7 @@ namespace UserManagementService.Controllers
             return CreatedAtAction(nameof(GetAll), new { id = createdUser.id }, createdUser);
         }
 
-        [HttpPut("{id}/active")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateActive(Guid id, [FromBody] UserUpdateDto updateDto)
         {
             var updatedUser = await _userService.UpdateAsync(id, updateDto);
@@ -44,9 +44,9 @@ namespace UserManagementService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(bool? active, string? searchTerm, DateTime? initialBirthdate, DateTime? finalBirthdate, string? sort, string? order)
         {
-            var users = await _userService.GetAllAsync();
+            var users = await _userService.GetAllAsync(active, searchTerm, initialBirthdate, finalBirthdate, sort, order);
             return Ok(users);
         }
 

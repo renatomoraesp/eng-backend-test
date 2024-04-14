@@ -40,9 +40,62 @@ namespace UserManagementService.Repositories
             return true;
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<User>> GetAllAsync(bool? active, string? searchTerm, DateTime? initialBirthdate, DateTime? finalBirthdate, string? sort, string? order)
         {
-            return await _dbContext.Users.ToListAsync();
+            IQueryable<User> query = _dbContext.Users;
+
+            if (active.HasValue)
+            {
+                query = query.Where(u => u.active == active.Value);
+            }
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(u => u.name.Contains(searchTerm) || (u.active ? "active" : "inactive").Contains(searchTerm));
+            }
+
+            if (initialBirthdate.HasValue && finalBirthdate.HasValue)
+            {
+                query = query.Where(u => u.birthdate >= initialBirthdate.Value && u.birthdate <= finalBirthdate.Value);
+            }
+            else if (initialBirthdate.HasValue)
+            {
+                query = query.Where(u => u.birthdate >= initialBirthdate.Value);
+            }
+            else if (finalBirthdate.HasValue)
+            {
+                query = query.Where(u => u.birthdate <= finalBirthdate.Value);
+            }
+
+            if (!string.IsNullOrEmpty(sort) && !string.IsNullOrEmpty(order))
+            {
+                var orderBy = order.ToLower() == "asc" ? "OrderBy" : "OrderByDescending";
+
+                switch (sort.ToLower())
+                {
+                    case "id":
+                        query = query.OrderBy(u => u.id);
+                        break;
+                    case "name":
+                        query = query.OrderBy(u => u.name);
+                        break;
+                    case "birthdate":
+                        query = query.OrderBy(u => u.birthdate);
+                        break;
+                    case "active":
+                        query = query.OrderBy(u => u.active);
+                        break;
+                    default:
+                        break;
+                }
+
+                if (orderBy == "OrderByDescending")
+                {
+                    query = query.Reverse();
+                }
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<User?> GetByIdAsync(Guid id)
