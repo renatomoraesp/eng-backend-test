@@ -109,13 +109,26 @@ namespace UserManagementService.Tests
                 new User { id = Guid.NewGuid(), name = "Jane Smith" }
             };
 
-            _userRepositoryMock.Setup(repo => repo.GetAllAsync(null, null, null, null, null, null))
-                .ReturnsAsync(users);
+            var pagedResult = new PagedResult<User>
+            {
+                content = users,
+                totalElements = users.Count,
+                size = 10,
+                totalPages = 1,
+                number = 1
+            };
 
-            var result = await _userService.GetAllAsync(null, null, null, null, null, null);
+            _userRepositoryMock.Setup(repo => repo.GetAllAsync(null, null, null, null, null, null, 1, 10))
+                .ReturnsAsync(pagedResult);
 
-            Assert.Equal(users, result);
-            _userRepositoryMock.Verify(repo => repo.GetAllAsync(null, null, null, null, null, null), Times.Once);
+            var result = await _userService.GetAllAsync(null, null, null, null, null, null, 1, 10);
+
+            Assert.Equal(users, result.content);
+            Assert.Equal(1, result.number);
+            Assert.Equal(10, result.size);
+            Assert.Equal(1, result.totalPages);
+            Assert.Equal(users.Count, result.totalElements);
+            _userRepositoryMock.Verify(repo => repo.GetAllAsync(null, null, null, null, null, null, 1, 10), Times.Once);
         }
 
         [Fact]
