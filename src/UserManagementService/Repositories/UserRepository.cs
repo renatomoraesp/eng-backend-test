@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using UserManagementService.Models;
+using UserManagementService.Specifications;
+using UserManagementService.Strategies;
 
 namespace UserManagementService.Repositories
 {
@@ -45,55 +44,15 @@ namespace UserManagementService.Repositories
             IQueryable<User> query = _dbContext.Users;
 
             if (active.HasValue)
-            {
-                query = query.Where(u => u.active == active.Value);
-            }
+                query = query.Where(UserQuerySpecifications.IsActive(active.Value));
 
             if (!string.IsNullOrEmpty(searchTerm))
-            {
-                query = query.Where(u => u.name.Contains(searchTerm) || (u.active ? "active" : "inactive").Contains(searchTerm));
-            }
+                query = query.Where(UserQuerySpecifications.ContainsSearchTerm(searchTerm));
 
-            if (initialBirthdate.HasValue && finalBirthdate.HasValue)
-            {
-                query = query.Where(u => u.birthdate >= initialBirthdate.Value && u.birthdate <= finalBirthdate.Value);
-            }
-            else if (initialBirthdate.HasValue)
-            {
-                query = query.Where(u => u.birthdate >= initialBirthdate.Value);
-            }
-            else if (finalBirthdate.HasValue)
-            {
-                query = query.Where(u => u.birthdate <= finalBirthdate.Value);
-            }
+            query = query.Where(UserQuerySpecifications.IsBirthdateInRange(initialBirthdate, finalBirthdate));
 
             if (!string.IsNullOrEmpty(sort) && !string.IsNullOrEmpty(order))
-            {
-                var orderBy = order.ToLower() == "asc" ? "OrderBy" : "OrderByDescending";
-
-                switch (sort.ToLower())
-                {
-                    case "id":
-                        query = query.OrderBy(u => u.id);
-                        break;
-                    case "name":
-                        query = query.OrderBy(u => u.name);
-                        break;
-                    case "birthdate":
-                        query = query.OrderBy(u => u.birthdate);
-                        break;
-                    case "active":
-                        query = query.OrderBy(u => u.active);
-                        break;
-                    default:
-                        break;
-                }
-
-                if (orderBy == "OrderByDescending")
-                {
-                    query = query.Reverse();
-                }
-            }
+                query = UserSortingStrategies.ApplySorting(query, sort, order);
 
             return await query.ToListAsync();
         }
