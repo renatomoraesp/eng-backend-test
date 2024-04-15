@@ -17,7 +17,7 @@ namespace UserManagementService.Services
         public async Task<User> CreateAsync(User user)
         {
             if (!user.active)
-                user.active = false;
+                user.active = true;
             
             user.birthdate = DateTime.SpecifyKind(user.birthdate, DateTimeKind.Utc);
             return await _userRepository.CreateAsync(user);

@@ -10,12 +10,12 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      - ../database/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
 
   app:
     build:
       context: ../
-      dockerfile: ./database/Dockerfile
+      dockerfile: ./dev-env/Dockerfile
     depends_on:
       - db
     environment:
