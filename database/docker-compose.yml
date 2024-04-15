@@ -11,3 +11,14 @@ services:
       - "5432:5432"
     volumes:
       - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+
+  app:
+    build:
+      context: ../
+      dockerfile: ./database/Dockerfile
+    depends_on:
+      - db
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=usermanagement;Username=admin;Password=password
+    ports:
+      - "8000:80"
