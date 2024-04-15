@@ -45,9 +45,9 @@ namespace UserManagementService.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(bool? active, string? searchTerm, DateTime? initialBirthdate, DateTime? finalBirthdate, string? sort, string? order)
+        public async Task<IActionResult> GetAll(bool? active, string? searchTerm, DateTime? initialBirthdate, DateTime? finalBirthdate, string? sort, string? order, int? page, int? size)
         {
-            var users = await _userService.GetAllAsync(active, searchTerm, initialBirthdate, finalBirthdate, sort, order);
+            var users = await _userService.GetAllAsync(active, searchTerm, initialBirthdate, finalBirthdate, sort, order, page, size);
             return Ok(users);
         }
 

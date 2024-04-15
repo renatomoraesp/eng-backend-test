@@ -63,6 +63,8 @@ The User Management Service is a .NET Core Web API that provides endpoints for m
     -   `finalBirthdate`: Filter users born before the specified date (e.g.,  `2000-12-31`)
     -   `sort`: Sort users by a specific column (e.g.,  `name`,  `birthdate`)
     -   `order`: Sorting order (`ASC`  for ascending,  `DESC`  for descending)
+    -   `page`: Page to be fetched for the paged object
+    -   `size`: Size considered for the page to be fetched
 
 ### Get a Single User
 

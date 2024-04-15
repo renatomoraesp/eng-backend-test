@@ -1,5 +1,3 @@
-using System;
-
 namespace UserManagementService.Models
 {
     public class User

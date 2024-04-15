@@ -10,7 +10,7 @@ namespace UserManagementService.Services
         Task<User> CreateAsync(User user);
         Task<User?> UpdateAsync(Guid id, UserUpdateDto userUpdate);
         Task<bool> DeleteAsync(Guid id);
-        Task<IEnumerable<User>> GetAllAsync(bool? active, string? searchTerm, DateTime? initialBirthdate, DateTime? finalBirthdate, string? sort, string? order);
+        Task<PagedResult<User>> GetAllAsync(bool? active, string? searchTerm, DateTime? initialBirthdate, DateTime? finalBirthdate, string? sort, string? order, int? page, int? size);
         Task<User?> GetOneAsync(Guid id);
     }
 }

@@ -45,15 +45,18 @@ namespace UserManagementService.Services
             return await _userRepository.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync(bool? active, string? searchTerm, DateTime? initialBirthdate, DateTime? finalBirthdate, string? sort, string? order)
+        public async Task<PagedResult<User>> GetAllAsync(bool? active, string? searchTerm, DateTime? initialBirthdate, DateTime? finalBirthdate, string? sort, string? order, int? page, int? size)
         {
             if (initialBirthdate.HasValue)
                 initialBirthdate = DateTime.SpecifyKind(initialBirthdate.Value, DateTimeKind.Utc);
             
             if (finalBirthdate.HasValue)
                 finalBirthdate = DateTime.SpecifyKind(finalBirthdate.Value, DateTimeKind.Utc);
+
+            page ??= 1;
+            size ??= 10;
             
-            return await _userRepository.GetAllAsync(active, searchTerm, initialBirthdate, finalBirthdate, sort, order);
+            return await _userRepository.GetAllAsync(active, searchTerm, initialBirthdate, finalBirthdate, sort, order, page, size);
         }
 
         public async Task<User?> GetOneAsync(Guid id)
