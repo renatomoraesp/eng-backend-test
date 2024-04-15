@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using UserManagementService.Models;
 using UserManagementService.Services;
+using UserManagementService.DTOs;
 
 namespace UserManagementService.Controllers
 {

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UserManagementService.Models;
 using UserManagementService.Repositories;
+using UserManagementService.DTOs;
 
 namespace UserManagementService.Services
 {
